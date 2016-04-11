@@ -5,6 +5,8 @@
     <title>Smart Blanket</title>
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="../static/script.js"></script>
 </head>
  
 <body>
@@ -22,13 +24,6 @@
             </nav>
             <h3 class="text-muted">Smark Blanket Temperature</h3>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="jumbotron" style="background-color: white; padding-top: 0; padding-bottom: 0;">
-            {% block content %} {{graph|safe}} {% endblock %}
-        </div>
-    </div>
-    <div class="container">
         <div class="row marketing" style="margin-top: 0;">
             <form>
               <div class="form-group">
@@ -41,13 +36,24 @@
               </div>
               <div class="checkbox">
                 <label>
-                  <input type="checkbox"> Remember this setting
+                  <input type="checkbox" id="saveSetting"> Remember this setting
                 </label>
               </div>
-              <button type="submit" class="btn btn-primary">Update Preference</button>
+              <div class="col-md-8"><button type="reset" class="btn btn-primary" id="userUpdate">Update Preference</button></div>
+              <div class="col-md-4"><button type="submit" class="btn btn-success" id="switchInterval">Swtich Graph Interval</button></div>
             </form>
         </div>
- 
+    </div>
+
+    <!-- graph -->
+    <div class="container-fluid">
+        <div class="jumbotron" style="background-color: white; padding-top: 0; padding-bottom: 0;">
+            {% block content %} {{graph|safe}} {% endblock %}
+        </div>
+    </div>
+
+    <!-- footer  -->
+    <div class="container">
         <footer class="footer">
             <p>&copy; Team Kevin Johnson ECE 4012</p>
         </footer>
