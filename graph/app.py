@@ -1,12 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, json, render_template, request, url_for
+# abort, flash, redirect
 import datetime
 from dateutil.relativedelta import relativedelta
 import random
 from collections import defaultdict
-
-
 import pygal
-import json
+from pygal.style import CleanStyle
 
 WELL_FORMED_DATA = True
 
@@ -66,9 +65,9 @@ def draw_line_graph():
     imp_temps = [float(i[1]) for i in fifteen_min]
     times = [str(i[0]) for i in fifteen_min]
     # create a bar chart
-    title = 'Temps for %s' % current_date.strftime("%Y-%m-%d %H:%M:%S")
+    title = 'Temperature for %s' % current_date.strftime("%Y-%m-%d")
     bar_chart = pygal.Line(width=1200, height=600,
-                          explicit_size=True, title=title, x_label_rotation=40)
+                          explicit_size=True, title=title, x_label_rotation=40, style=CleanStyle)
     bar_chart.x_labels = times
     bar_chart.add('Sensor1', imp_temps)
 
@@ -85,17 +84,24 @@ def draw_line_graph():
     bar_chart.add('Sensor3', imp_temps3)
     bar_chart.add('Sensor4', imp_temps4)
 
+    # html = """
+    #     <html>
+    #          <head>
+    #               <title>%s</title>
+    #          </head>
+    #           <body>
+    #              %s
+    #          </body>
+    #     </html>
+    #     """ % (title, bar_chart.render())
     html = """
-        <html>
-             <head>
-                  <title>%s</title>
-             </head>
-              <body>
-                 %s
-             </body>
-        </html>
-        """ % (title, bar_chart.render())
-    return html
+        %s
+        """ % bar_chart.render()
+    return html.decode("utf8")
+
+@app.route('/')
+def main():
+    return render_template('index.html', graph = draw_line_graph())
 
 if __name__ == '__main__':
     app.run(debug=True)
