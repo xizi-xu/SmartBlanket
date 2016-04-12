@@ -40,7 +40,7 @@
                 </label>
               </div>
               <div class="col-md-8"><button type="reset" class="btn btn-primary" id="userUpdate">Update Preference</button></div>
-              <div class="col-md-4"><button type="button" class="btn btn-success" id="switchInterval">Swtich Graph Interval</button></div>
+              <div class="col-md-4"><button type="button" class="btn btn-success" id="switchInterval">Switch Graph Interval</button></div>
             </form>
         </div>
     </div>
@@ -48,14 +48,17 @@
     <!-- graph -->
     <div class="container-fluid">
         <div class="jumbotron" style="background-color: white; padding-top: 0; padding-bottom: 0;">
-            {% block content %} {{graph|safe}} {% endblock %}
+            {% block content %} 
+            <div id='graph15'>{{graph15|safe}}</div>
+            <div id='graph1'>{{graph1|safe}}</div>
+            {% endblock %}
         </div>
     </div>
 
     <!-- footer  -->
     <div class="container">
         <footer class="footer">
-            <p>&copy; Team Kevin Johnson ECE 4012</p>
+            <p>&copy; Team Kevin Johnson ECE 4012 Spring 2016</p>
         </footer>
     </div>
 </body>

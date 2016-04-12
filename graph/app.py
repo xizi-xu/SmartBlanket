@@ -22,7 +22,7 @@ def date_range(start_date, end_date, increment, period):
 
 def generate_mock_data():
     today = datetime.datetime.now().date()
-    ten_am = datetime.time(hour=10)
+    ten_am = datetime.time(hour=1)
     eight_pm = datetime.time(hour=20)
 
     end_time = datetime.datetime.combine(today, ten_am)
@@ -57,18 +57,13 @@ data_set = []
 for i in range(0, 5):
     data_set.append(generate_mock_data())
 
-# @app.route('/signUpUser', methods=['POST'])
-# def signUpUser():
-#     user =  request.form['username'];
-#     password = request.form['password'];
-#     return json.dumps({'status':'OK','user':user,'pass':password})
-
 @app.route('/get_data')
 def get_data():
     return jsonify(data_set[0])
 
 @app.route('/graph')
-def draw_line_graph(data_set, interval = 'fifteen_minute_interval'):
+def draw_line_graph(interval = 'fifteen_minute_interval'):
+    # interval = 'one_minute_interval'
     # get data and time duration
     current_date = data_set[0]['date']
     times = [str(i[0]) for i in data_set[0][interval]]
@@ -104,7 +99,7 @@ def draw_line_graph(data_set, interval = 'fifteen_minute_interval'):
 
 @app.route('/')
 def main():
-    return render_template('index.html', graph = draw_line_graph(data_set))
+    return render_template('index.html', graph15 = draw_line_graph(), graph1 = draw_line_graph('one_minute_interval'))
 
 if __name__ == '__main__':
     app.run(debug=True)
