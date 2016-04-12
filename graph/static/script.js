@@ -19,7 +19,7 @@ $(document).ready(function(){
     	var temp = $('#userTemperature').val();
         var time = $('#userTime').val();
         if ($('#saveSetting').is(":checked")) {
-        	console.log("user wants to save current config");
+            alert("Your preference is saved!")
         }
         console.log("set " + temp + "F at "+ time);
 	});
