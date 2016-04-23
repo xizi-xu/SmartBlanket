@@ -12,16 +12,23 @@ $(document).ready(function(){
         	$('#graph1').hide();
         	is_graph_15_shown = true;
         }
-
     })
+    
     // user update preference
     $('#userUpdate').click(function() {
-    	var temp = $('#userTemperature').val();
-        var time = $('#userTime').val();
+    	var temp1 = $('#userTemperature1').val();
+        var temp2 = $('#userTemperature2').val();
+        var temp3 = $('#userTemperature3').val();
+        var temp4 = $('#userTemperature4').val();
+        var setTime = $('#userTime').val();
         if ($('#saveSetting').is(":checked")) {
             alert("Your preference is saved!")
         }
-        console.log("set " + temp + "F at "+ time);
+        var result = {
+            time: setTime,
+            prefs: [temp1, temp2, temp3, temp4]
+        }
+        console.log(result);
 	});
 });
 
