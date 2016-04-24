@@ -54,14 +54,6 @@ def generate_mock_data():
     # return jsonify(ret_val)
     return ret_val
 
-data_set = []
-for i in range(0, 5):
-    data_set.append(generate_mock_data())
-
-@app.route('/get_data')
-def get_data():
-    return jsonify(data_set[0])
-
 @app.route('/preferences')
 def get_preferences():
     now = datetime.datetime.now()
@@ -73,9 +65,46 @@ def get_preferences():
 
 
 @app.route('/graph')
-def draw_line_graph(interval = 'fifteen_minute_interval'):
+def draw_line_graph(interval = 'one_minute_interval'):
     # interval = 'one_minute_interval'
     # get data and time duration
+
+    client = pymongo.MongoClient()
+    q0, q1, q2, q3 = [], [] ,[], []
+    for doc in client.thcib.raw.find({"timestamp": {"gte": datetime.datetime.now() - datetime.timedelta(minutes = 30)}}).sort("timestamp", pymongo.DESCENDING):
+        q0.append([doc["timestamp"], doc["q0"]])
+        q1.append([doc["timestamp"], doc["q1"]])
+        q2.append([doc["timestamp"], doc["q2"]])
+        q3.append([doc["timestamp"], doc["q3"]])
+
+    if len(q0) == 0:
+        for doc in client.htcib.raw.find().sort("timestamp").limit(50).sort("timestamp", pymongo.DESCENDING):
+            q0.append([doc["timestamp"], doc["q0"]])
+            q1.append([doc["timestamp"], doc["q1"]])
+            q2.append([doc["timestamp"], doc["q2"]])
+            q3.append([doc["timestamp"], doc["q3"]])
+
+    temp_time = datetime.datetime.now()
+    data_set = [
+        {
+            "date": temp_time,
+            "one_minute_interval": q0
+        },
+        {
+            "date": temp_time,
+            "one_minute_interval": q1
+        },
+        {
+            "date": temp_time,
+            "one_minute_interval": q2
+        },
+        {
+            "date": temp_time,
+            "one_minute_interval": q3
+        }
+    ]
+
+
     current_date = data_set[0]['date']
     times = [str(i[0]) for i in data_set[0][interval]]
     # create a bar chart
