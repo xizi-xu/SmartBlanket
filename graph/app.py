@@ -6,6 +6,7 @@ import random
 from collections import defaultdict
 import pygal
 from pygal.style import CleanStyle
+import pymongo
 
 WELL_FORMED_DATA = True
 
@@ -61,6 +62,16 @@ for i in range(0, 5):
 def get_data():
     return jsonify(data_set[0])
 
+@app.route('/preferences')
+def get_preferences():
+    now = datetime.datetime.now()
+    pref = []
+    for i in range(20):
+        pref += [73 + i]*5
+
+    return jsonify({"preferences": [80, 70, 104.9, 91.12]})
+
+
 @app.route('/graph')
 def draw_line_graph(interval = 'fifteen_minute_interval'):
     # interval = 'one_minute_interval'
@@ -102,4 +113,4 @@ def main():
     return render_template('index.html', graph15 = draw_line_graph(), graph1 = draw_line_graph('one_minute_interval'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
