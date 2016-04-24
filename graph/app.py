@@ -70,37 +70,39 @@ def draw_line_graph(interval = 'one_minute_interval'):
     # get data and time duration
 
     client = pymongo.MongoClient()
-    q0, q1, q2, q3 = [], [] ,[], []
-    for doc in client.thcib.raw.find({"timestamp": {"gte": datetime.datetime.now() - datetime.timedelta(minutes = 30)}}).sort("timestamp", pymongo.DESCENDING):
+    q0, q1, q2, q3, q4 = [], [],[], [], []
+
+
+    for doc in client.htcib.raw.find().sort("timestamp", pymongo.ASCENDING).limit(50).sort("timestamp", pymongo.DESCENDING):
         q0.append([doc["timestamp"], doc["q0"]])
         q1.append([doc["timestamp"], doc["q1"]])
         q2.append([doc["timestamp"], doc["q2"]])
         q3.append([doc["timestamp"], doc["q3"]])
+        av = (doc["q0"] + doc["q1"] + doc["q2"] + doc["q3"]) / 4
+        q4.append([doc["timestamp"], av])
 
-    if len(q0) == 0:
-        for doc in client.htcib.raw.find().sort("timestamp").limit(50).sort("timestamp", pymongo.DESCENDING):
-            q0.append([doc["timestamp"], doc["q0"]])
-            q1.append([doc["timestamp"], doc["q1"]])
-            q2.append([doc["timestamp"], doc["q2"]])
-            q3.append([doc["timestamp"], doc["q3"]])
 
     temp_time = datetime.datetime.now()
     data_set = [
         {
             "date": temp_time,
-            "one_minute_interval": q0
+            "one_minute_interval": list(reversed(q0))
         },
         {
             "date": temp_time,
-            "one_minute_interval": q1
+            "one_minute_interval": reversed(q1)
         },
         {
             "date": temp_time,
-            "one_minute_interval": q2
+            "one_minute_interval": reversed(q2)
         },
         {
             "date": temp_time,
-            "one_minute_interval": q3
+            "one_minute_interval": reversed(q3)
+        },
+        {
+            "date": temp_time,
+            "one_minute_interval": reversed(q4)
         }
     ]
 
@@ -115,10 +117,11 @@ def draw_line_graph(interval = 'one_minute_interval'):
     bar_chart.x_labels = times
     # add line plots
     sensorNum = 1
+
     for sensor in data_set:
         temp_reading = sensor[interval]
         imp_temps = [float(i[1]) for i in temp_reading]
-        temp_label = 'Sensor ' + str(sensorNum)
+        temp_label = 'Sensor ' + str(sensorNum) if sensorNum <= 4 else "Average"
         bar_chart.add(temp_label, imp_temps)
         sensorNum += 1
 
